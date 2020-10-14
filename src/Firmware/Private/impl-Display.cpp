@@ -1,10 +1,10 @@
 #include "../../Firmware/Public/GnomeBoiFirmwareAPI.h"
-#include "../../Firmware/Private/defines.h"
+#include "../../Firmware/Private/config.h"
 #include "../../Firmware/Private/impl.h"
 
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1331.h>
-#include <SPI.h>
+//#include <SPI.h>
 
 // Color definitions
 #define BLACK           0x0000
@@ -17,7 +17,15 @@
 #define WHITE           0xFFFF
 
 namespace {
-    Adafruit_SSD1331 displayHandle = Adafruit_SSD1331(&SPI, PINOUT_cs, PINOUT_dc, PINOUT_rst);;
+   
+   // TODO: Test the removal of <SPI.h> dependency
+   // Adafruit_SSD1331 displayHandle = Adafruit_SSD1331(&SPI, PINOUT_CS, PINOUT_DC, PINOUT_RST);
+    Adafruit_SSD1331 displayHandle = Adafruit_SSD1331(
+        PINOUT_DISPLAY_SPI_CS,
+        PINOUT_DISPLAY_SPI_DC, 
+        PINOUT_DISPLAY_SPI_MOSI, 
+        PINOUT_DISPLAY_SPI_SCK, 
+        PINOUT_DISPLAY_SPI_RST);
 }
 
 void GnomeBOI_Internals::Display::displayBegin() {

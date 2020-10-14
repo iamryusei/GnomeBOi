@@ -95,8 +95,8 @@ namespace GnomeBOI {
         {
             BUTTON_A    = 0b00000001,
             BUTTON_B    = 0b00000010,
-            BUTTON_L    = 0b00000100,
-            BUTTON_R    = 0b00001000,
+            BUTTON_START    = 0b00000100,
+            BUTTON_RESERVED    = 0b00001000,
             ARROW_LEFT  = 0b00010000,
             ARROW_DOWN  = 0b00100000,
             ARROW_UP    = 0b01000000,

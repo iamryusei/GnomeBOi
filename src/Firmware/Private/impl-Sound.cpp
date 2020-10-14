@@ -1,5 +1,5 @@
 #include "../../Firmware/Public/GnomeBoiFirmwareAPI.h"
-#include "../../Firmware/Private/defines.h"
+#include "../../Firmware/Private/config.h"
 #include "../../Firmware/Private/impl.h"
 
 

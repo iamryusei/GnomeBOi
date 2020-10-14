@@ -1,10 +1,13 @@
 #include "../../Firmware/Public/GnomeBoiFirmwareAPI.h"
-#include "../../Firmware/Private/defines.h"
+#include "../../Firmware/Private/config.h"
 #include "../../Firmware/Private/impl.h"
 
 #include <Arduino.h>
 
+
 namespace {
+    constexpr unsigned int ANALOG_TO_DIGITAL_THRESHOLD = 512;
+
     uint8_t current_input_mask = 0B00000000; // stores the current input
     // uint8_t debounce_input_mask   = 0B00000000; // stores input changes of the previous update to avoid debouncing
 }
@@ -15,40 +18,39 @@ bool GnomeBOI::Input::isButtonPressed(GnomeBOI::Input::InputButton button) {
 
 void GnomeBOI_Internals::Input::updateInputs() {
 
-    // read all input pins
-    int sensorValue0 = digitalRead(A0);
-    int sensorValue1 = digitalRead(A1);
-    int sensorValue2 = analogRead(A2);
-    int sensorValue3 = analogRead(A3);
-    int sensorValue4 = digitalRead(4);
-    int sensorValue5 = digitalRead(5);
-    int sensorValue6 = digitalRead(6);
-    int sensorValue7 = digitalRead(7);
-    
     uint8_t new_input_mask = 0B00000000;
     
+    /*
     Serial.print("RED (A2)");
     Serial.print(sensorValue2);
     Serial.print(", BLUE (A3)");
     Serial.print(sensorValue3);
+    /**/
 
+    if( analogRead(PINOUT_ARROW_UP) > ANALOG_TO_DIGITAL_THRESHOLD)
+        new_input_mask |= GnomeBOI::Input::ARROW_UP;
 
-    if(sensorValue0)
-      new_input_mask |= GnomeBOI::Input::BUTTON_L;
-    if(sensorValue1)
-      new_input_mask |= GnomeBOI::Input::BUTTON_R;
-     if(sensorValue2)
-      new_input_mask |= GnomeBOI::Input::BUTTON_B;
-     if (sensorValue3 > 512)
+    if( analogRead(PINOUT_ARROW_LEFT) > ANALOG_TO_DIGITAL_THRESHOLD)
+        new_input_mask |= GnomeBOI::Input::ARROW_LEFT;
+
+    if( analogRead(PINOUT_ARROW_RIGHT) > ANALOG_TO_DIGITAL_THRESHOLD)
+        new_input_mask |= GnomeBOI::Input::ARROW_RIGHT;
+
+    if( analogRead(PINOUT_ARROW_DOWN) > ANALOG_TO_DIGITAL_THRESHOLD)
+        new_input_mask |= GnomeBOI::Input::ARROW_DOWN;
+     
+    if(digitalRead(PINOUT_BUTTON_A))
         new_input_mask |= GnomeBOI::Input::BUTTON_A;
-     if(sensorValue4)
-      new_input_mask |= GnomeBOI::Input::ARROW_DOWN;
-    if(sensorValue5)
-      new_input_mask |= GnomeBOI::Input::ARROW_RIGHT;
-     if(sensorValue6)
-      new_input_mask |= GnomeBOI::Input::ARROW_UP;
-     if(sensorValue7)
-      new_input_mask |= GnomeBOI::Input::ARROW_LEFT;
+
+    if(digitalRead(PINOUT_BUTTON_B))
+        new_input_mask |= GnomeBOI::Input::BUTTON_B;
+
+    if(digitalRead(PINOUT_BUTTON_START))
+        new_input_mask |= GnomeBOI::Input::BUTTON_START;
+
+    if(digitalRead(PINOUT_BUTTON_RESERVED))
+        new_input_mask |= GnomeBOI::Input::BUTTON_RESERVED;
+
 
     current_input_mask = new_input_mask;
  
